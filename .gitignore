@@ -1,8 +1,8 @@
 #directory exclusions
-out/
-target/
-test-output/
-.idea/
-src/test/resources/bin/
+/out/
+/target/
+/test-output/
+/.idea/
+/src/test/java/resources/
 
 #file exclusions
