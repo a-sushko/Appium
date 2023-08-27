@@ -16,8 +16,8 @@ import io.restassured.RestAssured;
 
 import objectLibraries.screens.CurrencyRatesScreen;
 import io.restassured.response.Response;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
@@ -34,7 +34,7 @@ public class BaseTest {
 	protected HomeScreen homeScreen;
 	protected CurrencyRatesScreen currencyRatesScreen;
 
-	@BeforeClass
+	@BeforeMethod
 	public void configureAppium() throws MalformedURLException {
 		
 		// run appium server automatically
@@ -65,7 +65,7 @@ public class BaseTest {
 		currencyRatesScreen = new CurrencyRatesScreen(driver);
 	}
 	
-	@AfterClass
+	@AfterMethod
 	public void tearDown() {
 		driver.quit();
 		service.stop();
