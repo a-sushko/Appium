@@ -1,8 +1,6 @@
 package objectLibraries.screens;
 
 import org.openqa.selenium.By;
-
-import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
 
 public class CurrencyRatesScreen extends BaseScreen {

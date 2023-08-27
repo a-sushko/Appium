@@ -2,7 +2,6 @@ package objectLibraries.screens;
 
 import objectLibraries.screenAsserts.NBRBRateScreenAsserts;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
@@ -19,8 +18,6 @@ public class NBRBRateScreen extends BaseScreen{
 	 */
 	public final By LOC_TXT_TITLE = By.id("com.softteco.bsbank:id/title");
 	public final By LOC_ICO_CALC = AppiumBy.accessibilityId("Calculator");
-	public final By LOC_BTN_CURRENCY_RATES = By.id("com.softteco.bsbank:id/main_screen_Exchange");
-
 	public String TXT_SCREEN_TITLE = "National bank rates";
 
 	public NBRBRateScreenAsserts screenAsserts;
@@ -45,8 +42,7 @@ public class NBRBRateScreen extends BaseScreen{
 
 	/**
 	 * Method to perform click to the calc icon
-	 *
-	 * @return
+	 * @return an instance of CalculatorScreen
 	 */
 	public CalculatorScreen openCalcScreen() {
 		click(LOC_ICO_CALC);
@@ -59,10 +55,9 @@ public class NBRBRateScreen extends BaseScreen{
 	/**
 	 * Method to scroll to the target currency element on screen
 	 * @param currencyPair string to provide a pair of target currency rate in format 'USD/BYN'
-	 * @return target WebElement
 	 */
-    private WebElement scrollTillCurrencyVisible(String currencyPair) {
-    	return driver.findElement(AppiumBy.androidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().textContains(\"" + currencyPair + "\").instance(0))"));
+    private void scrollTillCurrencyVisible(String currencyPair) {
+    	driver.findElement(AppiumBy.androidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().textContains(\"" + currencyPair + "\").instance(0))"));
     }
     
     /**

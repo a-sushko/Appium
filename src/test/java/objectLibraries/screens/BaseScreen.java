@@ -84,13 +84,13 @@ public class BaseScreen {
 	
 	/**
 	 * Method to explicit wait element displayed or not
+	 *
 	 * @param locator provide the locator of target element
 	 * @param timeout provide timeout in seconds
 	 */
-	public WebElement waitForDisplayed (By locator, Integer timeout) {
-		return wait.withTimeout(Duration.ofSeconds(timeout)).until(ExpectedConditions.visibilityOfElementLocated(locator));
+	public void waitForDisplayed (By locator, Integer timeout) {
+		wait.withTimeout(Duration.ofSeconds(timeout)).until(ExpectedConditions.visibilityOfElementLocated(locator));
 	}
-
 
 	/**
 	 * Method to explicit wait screen keyboard is shown
@@ -140,7 +140,7 @@ public class BaseScreen {
 	}
 
 	public WebElement getElementChildLocated(By parentLocator, By childLocator){
-		return driver.findElement(parentLocator).findElement(childLocator);
+		return getElementLocated(parentLocator).findElement(childLocator);
 	}
 
 }

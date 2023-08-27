@@ -11,7 +11,7 @@ public class NBCurrencyTests extends BaseTest {
 
 		homeScreen.navigateToCurrencyRates()
 				.navigateToNBRBRates()
-				.screenAsserts.validateTheSwissFrankRate(expectedCHFRank.isEmpty() ? "3.5" : expectedCHFRank);
+				.screenAsserts.validateTheSwissFrankRate(expectedCHFRank);
 
 	}
 
