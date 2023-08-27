@@ -1,6 +1,5 @@
 package objectLibraries.screens;
 
-import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
 import objectLibraries.screenAsserts.CalculatorScreenAsserts;
 import org.openqa.selenium.By;
@@ -10,7 +9,6 @@ public class CalculatorScreen extends BaseScreen {
 	/**
 	 * initialization of the page locators
 	 */
-	public final By LOC_ICO_UP_ARROW = AppiumBy.accessibilityId("Up");
 	public final By LOC_TXT_TITLE = By.id("com.softteco.bsbank:id/title");
 	public final By LOC_INFO_BUY_CUR_PLATE = By.id("com.softteco.bsbank:id/buy_good_view");
 	public final By LOC_INFO_SELL_CUR_PLATE = By.id("com.softteco.bsbank:id/sell_good_view");
@@ -40,12 +38,10 @@ public class CalculatorScreen extends BaseScreen {
 
 	/**
 	 * Method to tap on currency amount field
-	 * @return an instance of CalculatorScreen
 	 */
-	public CalculatorScreen clickCurrencyAmountField() {
+	public void clickCurrencyAmountField() {
 		click(LOC_EDIT_TXT_CUR_AMOUNT);
 		waitForSystemKeyboardIsShown(6);
-		return new CalculatorScreen(driver);
 	}
 
 	/**
@@ -58,8 +54,5 @@ public class CalculatorScreen extends BaseScreen {
 		driver.hideKeyboard();
 		return new CalculatorScreen(driver);
 	}
-
-
-
 
 }

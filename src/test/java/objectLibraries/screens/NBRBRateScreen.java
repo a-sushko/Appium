@@ -17,7 +17,6 @@ public class NBRBRateScreen extends BaseScreen{
 	/**
 	 * page elements locators
 	 */
-	public final By LOC_ICO_UP_ARROW = AppiumBy.accessibilityId("Up");
 	public final By LOC_TXT_TITLE = By.id("com.softteco.bsbank:id/title");
 	public final By LOC_ICO_CALC = AppiumBy.accessibilityId("Calculator");
 	public final By LOC_BTN_CURRENCY_RATES = By.id("com.softteco.bsbank:id/main_screen_Exchange");
