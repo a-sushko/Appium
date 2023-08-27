@@ -20,8 +20,6 @@ public class HomeScreen extends BaseScreen {
 	public final By LOC_BTN_CURRENCY_RATES = By.id("com.softteco.bsbank:id/main_screen_Exchange");
 
 
-
-	CurrencyRatesScreen currencyRatesScreen;
 	public HomeScreenAsserts screenAsserts;
 
 	/**
@@ -33,11 +31,11 @@ public class HomeScreen extends BaseScreen {
 		screenAsserts = new HomeScreenAsserts(this);
     }
 	
-	public CurrencyRatesScreen navigateToCurrencyRates() throws InterruptedException {
+	public CurrencyRatesScreen navigateToCurrencyRates() {
 		click(LOC_BTN_CURRENCY_RATES);
 		waitForDisplayed(By.id("com.softteco.bsbank:id/title"), 10);
-		currencyRatesScreen = new CurrencyRatesScreen(driver);
-		assertThat(getElementText(currencyRatesScreen.LOC_TXT_Title), is(equalToIgnoringCase(currencyRatesScreen.TXT_SCREEN_TITLE)));
+		CurrencyRatesScreen currencyRatesScreen = new CurrencyRatesScreen(driver);
+		assertThat(getElementText(currencyRatesScreen.LOC_TXT_TITLE), is(equalToIgnoringCase(currencyRatesScreen.TXT_SCREEN_TITLE)));
 		return currencyRatesScreen;
 	}
 	

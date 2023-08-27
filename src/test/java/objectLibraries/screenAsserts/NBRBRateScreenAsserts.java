@@ -3,9 +3,7 @@ package objectLibraries.screenAsserts;
 import objectLibraries.screens.NBRBRateScreen;
 
 import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.*;
-import org.testng.Assert;
 
 public class NBRBRateScreenAsserts {
 
@@ -20,11 +18,11 @@ public class NBRBRateScreenAsserts {
     }
 
     /**
-     * Method to compare the
+     * Method to check the rank of the Swiss frank on the app screen
      * @param expectedRank the expected error message
      * @return an instance of the login page
      */
-    public NBRBRateScreen compareTheSwissFrankRate(String expectedRank) {
+    public NBRBRateScreen validateTheSwissFrankRate(String expectedRank) {
         assertThat(nbrbRateScreen.getCurrencyRate("CHF/BYN"), is(equalTo(expectedRank)));
         return nbrbRateScreen;
     }

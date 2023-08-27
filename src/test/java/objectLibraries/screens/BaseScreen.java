@@ -14,6 +14,10 @@ import com.google.common.collect.ImmutableMap;
 
 import io.appium.java_client.android.AndroidDriver;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+
 
 public class BaseScreen {
 	protected AndroidDriver driver;
@@ -58,7 +62,17 @@ public class BaseScreen {
 	public String getElementText (By locator) {
 		return driver.findElement(locator).getText();
 	}
-	
+
+
+	/**
+	 * Method to extract the text from target element
+	 * @param element provide the target Web element
+	 * @return an extracted text in type of String
+	 */
+	public String getElementText (WebElement element) {
+		return element.getText();
+	}
+
 	/**
 	 * Method to Assert is element displayed or not
 	 * @param locator provide the locator of target element
@@ -77,21 +91,56 @@ public class BaseScreen {
 		return wait.withTimeout(Duration.ofSeconds(timeout)).until(ExpectedConditions.visibilityOfElementLocated(locator));
 	}
 
+
 	/**
-	 * Method to Assert is element displayed or not
+	 * Method to explicit wait screen keyboard is shown
+	 * @param timeout provide timeout in seconds
+	 */
+	public void waitForSystemKeyboardIsShown (Integer timeout) {
+		boolean keyboardShown = false;
+		for (int i = 0; i < timeout*2; i++) {
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				System.out.println("Thread interrupted with message:" + e.getMessage());
+			}
+			if(driver.isKeyboardShown()) {
+				keyboardShown = true;
+				break;
+			}
+		}
+
+		assertThat(keyboardShown, equalTo(true));
+	}
+
+	/**
+	 * Method to Assert is element updated or not
+	 *
 	 * @param locator provide the locator of target element
 	 * @param timeout provide timeout in seconds
 	 */
-	public boolean waitForElementUpdate (By locator, Integer timeout) {
-		WebElement ele = driver.findElement(locator);
-		return wait.withTimeout(Duration.ofSeconds(timeout)).until(ExpectedConditions.stalenessOf(ele));
+	public void waitForElementContains (By locator, String expectedString, Integer timeout) {
+		wait.withTimeout(Duration.ofSeconds(timeout)).until(ExpectedConditions.textToBePresentInElementLocated(locator, expectedString));
 	}
-	
-	
-		
-//	public void click(AppiumBy locator) {
-//		WebElement el = driver.findElement(locator);
-//		Assert.assertTrue(el.isDisplayed(), "Element with locator - " + locator.toString() + " is not exist");
-//		el.click();
-//	}
+
+	/**
+	 * Method to Assert is element updated or not
+	 * @param locator provide the locator of target input text element
+	 * @param text text to input
+	 */
+	public void inputTextToInputFieldLocated (By locator,String text) {
+		WebElement ele = driver.findElement(locator);
+		ele.sendKeys(text);
+		assertThat(ele.getText(), is(equalTo(text)));
+	}
+
+
+	public WebElement getElementLocated(By locator){
+		return driver.findElement(locator);
+	}
+
+	public WebElement getElementChildLocated(By parentLocator, By childLocator){
+		return driver.findElement(parentLocator).findElement(childLocator);
+	}
+
 }

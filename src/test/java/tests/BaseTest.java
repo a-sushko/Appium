@@ -1,11 +1,12 @@
 package tests;
 
 import java.io.File;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Random;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -13,20 +14,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.restassured.RestAssured;
 
-
-import io.restassured.path.json.JsonPath;
-import io.restassured.response.ResponseBody;
 import objectLibraries.screens.CurrencyRatesScreen;
 import io.restassured.response.Response;
-import org.testng.Reporter;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.json.JSONObject;
-import org.json.ParserConfiguration;
-import org.json.JSONStringer;
-
-
-
 
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
@@ -34,11 +25,7 @@ import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import objectLibraries.screens.HomeScreen;
 
-import javax.naming.spi.ResolveResult;
-
 import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.*;
-import static io.restassured.http.ContentType.JSON;
 
 
 public class BaseTest {
@@ -57,7 +44,7 @@ public class BaseTest {
 		service.start();
 
 
-        // *rete capabilities
+        // generate capabilities
 		UiAutomator2Options options = new UiAutomator2Options();
 		options.setDeviceName("Pixel XL API 33");
 		options.setApp(System.getProperty("user.dir") + "/src/test/java/resources/BSB_Bank_base.apk");
@@ -86,7 +73,7 @@ public class BaseTest {
 
 	public String getCookie(){
 		RestAssured.baseURI = "https://mobile.bsb.by/api/v1/free-zone-management/exchange-rates/rates";
-		final String cookie = given().log().all()
+        return given().log().all()
 				.header("User-Agent", "PostmanRuntime/7.32.3")
 				.when()
 				.get("")
@@ -94,7 +81,6 @@ public class BaseTest {
 				.statusCode(500)
 				.extract()
 				.cookie("session-cookie");
-		return cookie;
 	}
 
 
@@ -123,24 +109,77 @@ public class BaseTest {
 
 	}
 
-	public String getCurrencyRateFromResponse(String currencyName) {
-		String targetCurrencyRate;
+	public String getCurrencyRateFromResponse(String targetCurrencyName) {
+		String targetCurrencyRate = "";
 		JsonArray ratesArray = getResponseBody().getAsJsonArray("rates");
+		System.out.println("!!!!!!!!!!!!!!DEBUG!!!!!!!!!!!!!");
 		for (JsonElement cur : ratesArray){
 			JsonObject currency = cur.getAsJsonObject();
-			System.out.println("!!!!!!!!!!!!!!DEBUG!!!!!!!!!!!!!");
-			System.out.print(currency);
-
+			System.out.println(currency);
+			if (currency.get("buyCurrencyName").getAsString().equalsIgnoreCase(targetCurrencyName)) {
+				targetCurrencyRate = currency.get("buyAmount").getAsString();
+				break;
+			}
 		}
-
-
-
-
-		return "";
+		System.out.println(targetCurrencyRate);
+		return targetCurrencyRate.isEmpty() ? "0" : targetCurrencyRate;
 	}
 
-	
-	
+	/**
+	 * Method to get expected displayed currency rate from it string value received from response
+	 * @param rawCurrencyRate - string value of rate
+	 * @return new rounded value (###.##)
+	 */
+	public String getDisplayedCurrencySellRateFromResponse(String rawCurrencyRate) {
+		DecimalFormat df = new DecimalFormat("#0.00");
+		return df.format(strToFloat(rawCurrencyRate)).replace(",",".");
+	}
+
+	/**
+	 * Method to get expected displayed currency rate from it string value received from response
+	 * @param rawCurrencyRate - string value of rate
+	 * @return new rounded value (###.##)
+	 */
+	public String getDisplayedCurrencyBuyRateFromResponse(String rawCurrencyRate) {
+		DecimalFormat df = new DecimalFormat("#0.00");
+		return df.format(1/strToFloat(rawCurrencyRate)).replace(",",".");
+	}
+
+	/**
+	 * Method to convert string value to float value
+	 * @param value - target string
+	 * @return float value of provided string
+	 */
+	public Float strToFloat(String value) {
+		return Float.parseFloat(value);
+	}
+
+	/**
+	 * Method to generate random amount of currency to change
+	 * @param minValue - the lowest value of amount
+	 * @param maxValue  - the highest value of amount
+	 * @return float value of provided string
+	 */
+	public String generateRandomAmount(Float minValue, Float maxValue) {
+		Random r = new Random();
+		DecimalFormat df = new DecimalFormat("#0.00");
+		String amount = df.format(minValue + r.nextFloat() * (maxValue - minValue)).replace(",",".");
+		System.out.println("Currency amount: " + amount);
+		return amount;
+	}
+
+	/**
+	 * Method to count the sum of 2'nd currency
+	 * @param amount - the amount of '1'st currency
+	 * @param currencyName  - the currency name (USD, RUB etc.)
+	 * @return float value of provided string
+	 */
+	public String getExpectedBuySum(String amount, String currencyName) {
+		Float currencyBuyRate = 1/strToFloat(getCurrencyRateFromResponse(currencyName));
+		Float currencyAmount = strToFloat(amount);
+		DecimalFormat df = new DecimalFormat("#0.00");
+		return df.format(currencyBuyRate*currencyAmount).replace(",",".");
+	}
 	
 	
 }

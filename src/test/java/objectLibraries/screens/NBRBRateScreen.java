@@ -6,6 +6,11 @@ import org.openqa.selenium.WebElement;
 
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+
 
 public class NBRBRateScreen extends BaseScreen{
 	
@@ -13,7 +18,7 @@ public class NBRBRateScreen extends BaseScreen{
 	 * page elements locators
 	 */
 	public final By LOC_ICO_UP_ARROW = AppiumBy.accessibilityId("Up");
-	public final By LOC_TXT_Title = By.id("com.softteco.bsbank:id/title");
+	public final By LOC_TXT_TITLE = By.id("com.softteco.bsbank:id/title");
 	public final By LOC_ICO_CALC = AppiumBy.accessibilityId("Calculator");
 	public final By LOC_BTN_CURRENCY_RATES = By.id("com.softteco.bsbank:id/main_screen_Exchange");
 
@@ -38,6 +43,19 @@ public class NBRBRateScreen extends BaseScreen{
     	scrollTillCurrencyVisible(currencyPair);
     	return getElementText(generateCurrencyRateXPath("CHF/BYN"));
     }
+
+	/**
+	 * Method to perform click to the calc icon
+	 *
+	 * @return
+	 */
+	public CalculatorScreen openCalcScreen() {
+		click(LOC_ICO_CALC);
+		CalculatorScreen calculatorScreen = new CalculatorScreen(driver);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(calculatorScreen.LOC_TXT_TITLE));
+		assertThat(getElementText(calculatorScreen.LOC_TXT_TITLE), is(equalTo(calculatorScreen.TXT_SCREEN_TITLE)));
+		return new CalculatorScreen(driver);
+	}
 
 	/**
 	 * Method to scroll to the target currency element on screen
